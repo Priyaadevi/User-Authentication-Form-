@@ -8,12 +8,15 @@
 </head>
 <body>
     <div class="container">
+        <!-- Company Logo -->
+        <img src="logo.jpg" alt="Company Logo" class="logo">
+        
         <h2>Login</h2>
         <input type="email" id="email" placeholder="Enter Email">
         <input type="password" id="password" placeholder="Enter Password">
         <button onclick="registerUser()">Register</button>
         <button onclick="loginUser()">Login</button>
-        <p id="message"></p>
+        <p id="message" style="display: none;"></p>
     </div>
     <script type="module" src="auth.js"></script>
 </body>

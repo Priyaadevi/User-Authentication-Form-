@@ -20,23 +20,60 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // Function to Register User
+// Function to Register User
 async function registerUser() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const messageBox = document.getElementById("message");
+
+    console.log("⏳ Registering user...");
+
+    if (!messageBox) {
+        console.error("❌ Error: messageBox element not found!");
+        return;
+    }
+
+    // 🔹 **Ensure the message is visible**
+    messageBox.style.display = "block";
+
     if (password.length < 6) {
-        document.getElementById("message").innerText = "Password must be at least 6 characters.";
+        console.log("❌ Password too short");
+        messageBox.innerText = "❌ Password must be at least 6 characters.";
+        messageBox.style.color = "red";
         return;
     }
 
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+
+        console.log("✅ User registered:", user);
         await setDoc(doc(db, "users", user.uid), { email: user.email });
-        document.getElementById("message").innerText = "User registered successfully!";
+
+        console.log("📌 Data stored in Firestore");
+
+        // 🔹 **Force UI Repaint**
+        messageBox.innerText = "✅ User registered successfully!";
+        messageBox.style.color = "green";
+        messageBox.style.visibility = "visible"; // Ensure it's not hidden
+
+        // 🔹 **Trigger a small UI update**
+        messageBox.style.display = "none";
+        setTimeout(() => {
+            messageBox.style.display = "block";
+        }, 100);
+
+        // 🔹 **Remove message after 5 seconds**
+        setTimeout(() => {
+            messageBox.innerText = "";
+        }, 5000);
     } catch (error) {
-        document.getElementById("message").innerText = error.message;
+        console.error("❌ Registration error:", error.message);
+        messageBox.innerText = "❌ Registration failed: " + error.message;
+        messageBox.style.color = "red";
     }
 }
+
 
 // Function to Login User
 async function loginUser() {
